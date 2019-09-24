@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/home/eneko/.dotnet/store/|arch|/|tfm|",
+      "/home/eneko/.nuget/packages"
+    ]
+  }
+}
