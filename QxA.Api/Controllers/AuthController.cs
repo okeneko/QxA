@@ -33,7 +33,7 @@ namespace QxA.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody]RegisterDTO register)
+        public async Task<IActionResult> Register([FromBody]RegisterDTO register)
         {
             User user = new User
             {
@@ -52,7 +52,7 @@ namespace QxA.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody]LoginDTO login)
+        public async Task<IActionResult> Login([FromBody]LoginDTO login)
         {
             var user = await _userManager.FindByNameAsync(login.UserName);
 
@@ -63,6 +63,8 @@ namespace QxA.Api.Controllers
                 return Ok(new
                 {
                     username = user.UserName,
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
                     token = new JwtSecurityTokenHandler().WriteToken(GenerateJwtToken(user))
                 }); 
             else
@@ -70,8 +72,27 @@ namespace QxA.Api.Controllers
             
         }
 
+        [Authorize]
+        [HttpPost("authorize")]
+        public async Task<IActionResult> AuthorizeUser([FromBody]LoginDTO login)
+        {
+            if (!_authService.AuthorizeUsernameWithToken(Request.Headers["Authorization"][0], login.UserName))
+                return Unauthorized(new { error = "Not authorized." });
+
+            var user = await _userManager.FindByNameAsync(login.UserName);
+
+            if (user == null)
+                return NotFound(new { error = $"User {login.UserName} not found." });
+
+            if (await _userManager.CheckPasswordAsync(user, login.Password))
+                return Ok(new { success = "The user was authorized."});
+            else
+                return Unauthorized(new { error = "The password is wrong." });
+
+        }
+
         [HttpGet("{username}")]
-        public async Task<ActionResult> GetUser(string username)
+        public async Task<IActionResult> GetUser(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
 
@@ -83,7 +104,7 @@ namespace QxA.Api.Controllers
 
         [Authorize]
         [HttpDelete("{username}")]
-        public async Task<ActionResult> Delete(string username)
+        public async Task<IActionResult> Delete(string username)
         {
             if (!_authService.AuthorizeUsernameWithToken(Request.Headers["Authorization"][0], username))
                 return Unauthorized(new { error = "Not authorized to delete this user." });
@@ -100,6 +121,29 @@ namespace QxA.Api.Controllers
             else
                 return BadRequest(result.Errors);
             
+        }
+
+        [Authorize]
+        [HttpPut("{username}")]
+        public async Task<IActionResult> Update(string username, [FromBody]UpdateUserDTO newUser)
+        {
+            if (!_authService.AuthorizeUsernameWithToken(Request.Headers["Authorization"][0], username))
+                return Unauthorized(new { error = "Not authorized to update this user." });
+
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                return NotFound(new { error = $"User {username} was not found." });
+
+            user.FirstName = newUser.FirstName;
+            user.LastName = newUser.LastName;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+                return Ok(new { success = $"The user {user.UserName} was updated." });
+            else
+                return BadRequest(result.Errors);
         }
 
         private JwtSecurityToken GenerateJwtToken(User user)

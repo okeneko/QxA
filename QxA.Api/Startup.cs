@@ -72,6 +72,14 @@ namespace QxA.Api
             services.AddScoped<IQuestionsRepository, QuestionsRepository>();
 
             services.AddAutoMapper(typeof(MappingProfile));
+
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }));
+
             services.AddControllers();
         }
 
@@ -96,6 +104,8 @@ namespace QxA.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
