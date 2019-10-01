@@ -41,6 +41,7 @@ namespace QxA.Api.Repository
                 .Include(q => q.Asker)
                 .Where(q => q.Owner.UserName == username)
                 .Where(q => String.IsNullOrEmpty(q.Answer))
+                .OrderBy(q => q.Asked)
                 .ToListAsync();
 
             return _mapper.Map<List<QuestionAnswerDTO>>(questions);

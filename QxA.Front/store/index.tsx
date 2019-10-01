@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import cookie from 'cookie'
+import Cookies from 'js-cookie'
 import IUser from '../interfaces/IUser'
 import IAction from '../interfaces/IAction'
 import IState from '../interfaces/IState'
@@ -19,6 +19,7 @@ const reducer = (state: IUser, action: IAction): IUser => {
       if (state.token === '') return { ...action.payload }
       else return state
     case 'LOGOUT':
+      Cookies.remove('token')
       return { ...emptyUser }
     case 'EDIT':
       return { ...state, ...action.payload }

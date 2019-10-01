@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Router from 'next/router'
 import { Modal, Typography, Form, Input, message } from 'antd'
-import axios from 'axios'
+import http from '../http'
 import Cookies from 'js-cookie'
 import { Store } from '../store'
 const { Title } = Typography
@@ -22,20 +22,13 @@ const RemoveAccountModal = ({ modalVisible, setVisible }) => {
       setPasswordError('')
       setLoading(true)
       try {
-        await axios.post(
-          'https://localhost:5001/api/auth/authorize',
-          {
-            username: user.username,
-            password: password
-          },
-          { headers: { Authorization: `Bearer ${user.token}` } }
-        )
-
-        await axios.delete(`https://localhost:5001/api/auth/${user.username}`, {
-          headers: { Authorization: `Bearer ${user.token}` }
+        await http.post('auth/authorize', {
+          username: user.username,
+          password: password
         })
 
-        Cookies.remove('token')
+        await http.delete(`auth/${user.username}`)
+
         dispatch({
           type: 'LOGOUT'
         })
@@ -56,7 +49,7 @@ const RemoveAccountModal = ({ modalVisible, setVisible }) => {
           setPasswordError('The password is wrong.')
         } else {
           message.error(
-            "An error occurred, the account couldn't be removed. Try again after a couple of minutes.",
+            'An error occurred, the account could not be removed. Try again after a couple of minutes.',
             8
           )
           setLoading(false)
@@ -68,7 +61,6 @@ const RemoveAccountModal = ({ modalVisible, setVisible }) => {
   }
 
   const noModal = () => {
-    console.log('no')
     setVisible(false)
   }
 

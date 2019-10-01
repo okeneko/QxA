@@ -2,13 +2,12 @@ import React, { useContext, useEffect } from 'react'
 import Link from 'next/link'
 import Cookies from 'js-cookie'
 import jwtDecode from 'jwt-decode'
-import axios from 'axios'
+import http from '../http'
 import { Layout as AntLayout } from 'antd'
 import { Store } from '../store'
 import LoginMenu from './login-menu'
 import LoggedMenu from './logged-menu'
 import IUser from '../interfaces/IUser'
-import DevAlert from './dev-alert'
 
 const { Header, Content } = AntLayout
 
@@ -18,9 +17,7 @@ const Layout = ({ children }) => {
 
   const getUser = async () => {
     const { nameid } = jwtDecode(token)
-    const { data } = await axios.get(
-      `https://localhost:5001/api/auth/${nameid}`
-    )
+    const { data } = await http.get(`auth/${nameid}`)
 
     const user: IUser = {
       username: data.userName,
@@ -45,7 +42,7 @@ const Layout = ({ children }) => {
     <AntLayout className="layout">
       <Header className="header">
         <Link href="/">
-          <a style={{ color: 'white', fontSize: '2rem' }}>QxA</a>
+          <a className="header__title">QxA</a>
         </Link>
         {user.token === '' ? <LoginMenu /> : <LoggedMenu />}
       </Header>

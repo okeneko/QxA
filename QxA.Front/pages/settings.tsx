@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Row, Col, Card, Typography, Button, Divider, message } from 'antd'
-import axios from 'axios'
+import http from '../http'
 import { Store } from '../store'
 import IUser from '../interfaces/IUser'
 import RemoveAccountModal from '../components/remove-account-modal'
@@ -27,14 +27,10 @@ const settings = () => {
     })
 
     try {
-      await axios.put(
-        `https://localhost:5001/api/auth/${user.username}`,
-        {
-          firstname: firstName,
-          lastname: lastName
-        },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      )
+      await http.put(`auth/${user.username}`, {
+        firstname: firstName,
+        lastname: lastName
+      })
       closeLoading()
       message.success('The changes were saved successfully.', 5)
     } catch (error) {

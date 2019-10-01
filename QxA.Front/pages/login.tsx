@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Card, Form, Input, Button, Icon, Row, Col } from 'antd'
-import axios from 'axios'
+import http from '../http'
 import Cookies from 'js-cookie'
 import cookie from 'cookie'
 import { Store } from '../store'
@@ -18,13 +18,10 @@ const LoginForm = ({ form }): JSX.Element => {
       if (!error) {
         setLoading(true)
         try {
-          const { data } = await axios.post(
-            'https://localhost:5001/api/auth/login',
-            {
-              username: values.username.trim(),
-              password: values.password
-            }
-          )
+          const { data } = await http.post('auth/login', {
+            username: values.username.trim(),
+            password: values.password
+          })
 
           Cookies.set('token', data.token)
 

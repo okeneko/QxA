@@ -65,9 +65,9 @@ namespace QxA.Api.Controllers
                 await _repository.AskQuestion(question);
                 return Ok(new { success = "The question was successfully submitted." });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest(new { error = "The question could not be submitted." });
+                return BadRequest(ex.Message);
             }
         }
 

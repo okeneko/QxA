@@ -12,7 +12,6 @@ const LoggedMenu = () => {
   const { user, dispatch } = useContext(Store)
 
   const logout = () => {
-    Cookies.remove('token')
     dispatch({
       type: 'LOGOUT'
     })

@@ -1,9 +1,8 @@
 import React, { useContext, useEffect } from 'react'
-import axios from 'axios'
+import http from '../../http'
 import { Store } from '../../store'
 import Router from 'next/router'
 import IUser from '../../interfaces/IUser'
-import https from 'https'
 import DevAlert from '../../components/dev-alert'
 
 const User = ({ profile }) => {
@@ -28,12 +27,7 @@ const User = ({ profile }) => {
 
 User.getInitialProps = async ({ query: { user } }) => {
   try {
-    const { data } = await axios.get(
-      `https://localhost:5001/api/auth/${user}`,
-      {
-        httpsAgent: new https.Agent({ rejectUnauthorized: false })
-      }
-    )
+    const { data } = await http.get(`auth/${user}`)
 
     const profileUser: IUser = {
       username: data.userName,

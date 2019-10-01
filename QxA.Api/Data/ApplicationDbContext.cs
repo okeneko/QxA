@@ -17,6 +17,10 @@ namespace QxA.Infrastructure.Data
             base.OnModelCreating(builder);
 
             builder.Entity<QuestionAnswer>()
+                .Property(q => q.Id)
+                .ValueGeneratedOnAdd();
+
+            builder.Entity<QuestionAnswer>()
                 .HasOne(q => q.Owner);
 
             builder.Entity<QuestionAnswer>()

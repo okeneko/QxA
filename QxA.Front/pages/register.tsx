@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import http from '../http'
 import Router from 'next/router'
 import { Card, Form, Input, Row, Col, Button, message } from 'antd'
 
@@ -18,16 +18,13 @@ const RegisterForm = ({ form }) => {
       if (!error) {
         setLoading(true)
         try {
-          const { data } = await axios.post(
-            'https://localhost:5001/api/auth/register',
-            {
-              username: values.username.trim(),
-              email: values.email.trim(),
-              firstName: values.firstname.trim(),
-              lastName: values.lastname.trim(),
-              password: values.password
-            }
-          )
+          const { data } = await http.post('auth/register', {
+            username: values.username.trim(),
+            email: values.email.trim(),
+            firstName: values.firstname.trim(),
+            lastName: values.lastname.trim(),
+            password: values.password
+          })
 
           setLoading(false)
           resetFields()

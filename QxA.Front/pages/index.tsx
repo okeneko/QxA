@@ -1,19 +1,34 @@
-import React, { useContext, useEffect } from 'react'
-import { Store } from '../store'
-import IUser from '../interfaces/IUser'
-import axios from 'axios'
-import Link from 'next/link'
-import DevAlert from '../components/dev-alert'
+import React from 'react'
+import cookie from 'cookie'
+import jwtDecode from 'jwt-decode'
+import http from '../http'
+import Home from '../components/home'
+import Dashboard from '../components/dashboard'
 
-const Index = () => {
-  const { user, dispatch } = useContext(Store)
-  return (
-    <div>
-      <DevAlert />
-      <h1>hellooooo</h1>
-      {user.token !== '' && <h2>Welcome miss {user.firstName}</h2>}
-    </div>
+const Index = ({ logged, questions }) =>
+  logged ? <Dashboard dashboardQuestions={questions} /> : <Home />
+
+Index.getInitialProps = async ({ req }) => {
+  const { token } = cookie.parse(
+    req ? req.headers.cookie || '' : document.cookie
   )
+
+  let questions = []
+
+  if (!!token) {
+    const { nameid } = jwtDecode(token)
+    try {
+      const { data } = await http.get(`questions/${nameid}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      questions = [...data]
+    } catch (error) {
+      console.error(error.response)
+    }
+  }
+
+  return { logged: !!token, questions }
 }
 
 export default Index
