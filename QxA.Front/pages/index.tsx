@@ -1,7 +1,7 @@
 import React from 'react'
 import cookie from 'cookie'
 import jwtDecode from 'jwt-decode'
-import http from '../http'
+import { tokenHttp } from '../http'
 import Home from '../components/home'
 import Dashboard from '../components/dashboard'
 
@@ -18,10 +18,7 @@ Index.getInitialProps = async ({ req }) => {
   if (!!token) {
     const { nameid } = jwtDecode(token)
     try {
-      const { data } = await http.get(`questions/${nameid}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
+      const { data } = await tokenHttp(token).get(`questions/${nameid}`)
       questions = [...data]
     } catch (error) {
       console.error(error.response)

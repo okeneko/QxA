@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Row, Col, Card, Typography, Button, Divider, message } from 'antd'
-import http from '../http'
+import { http } from '../http'
 import { Store } from '../store'
 import IUser from '../interfaces/IUser'
 import RemoveAccountModal from '../components/remove-account-modal'

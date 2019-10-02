@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import http from '../http'
+import { http } from '../http'
 import Router from 'next/router'
 import { Card, Form, Input, Row, Col, Button, message } from 'antd'
 

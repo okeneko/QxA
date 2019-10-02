@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Router from 'next/router'
 import { Modal, Typography, Form, Input, message } from 'antd'
-import http from '../http'
+import { http } from '../http'
 import Cookies from 'js-cookie'
 import { Store } from '../store'
 const { Title } = Typography

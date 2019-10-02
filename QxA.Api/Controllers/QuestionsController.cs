@@ -57,6 +57,7 @@ namespace QxA.Api.Controllers
             return Ok(await _repository.GetAnsweredQuestions(username));
         }
 
+        [AllowAnonymous]
         [HttpPost("question")]
         public async Task<ActionResult> AskQuestion([FromBody]QuestionDTO question)
         {

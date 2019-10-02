@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import Router from 'next/router'
 import { Button, Row, Col, Icon, Divider, Empty, Spin } from 'antd'
 import { Store } from '../store'
-import http from '../http'
+import { http } from '../http'
 import QuestionCard from './question-card'
 import IQuestion from '../interfaces/IQuestion'
 

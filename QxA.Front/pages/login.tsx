@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Card, Form, Input, Button, Icon, Row, Col } from 'antd'
-import http from '../http'
+import { http } from '../http'
 import Cookies from 'js-cookie'
 import cookie from 'cookie'
 import { Store } from '../store'
@@ -30,9 +30,9 @@ const LoginForm = ({ form }): JSX.Element => {
             payload: data
           })
 
-          setLoginError('')
-          setLoading(false)
-          resetFields()
+          // setLoginError('')
+          // setLoading(false)
+          // resetFields()
 
           Router.push('/')
         } catch (error) {

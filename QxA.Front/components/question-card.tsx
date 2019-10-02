@@ -14,15 +14,10 @@ import {
 } from 'antd'
 import Link from 'next/link'
 import moment from 'moment'
-import IQuestion from '../interfaces/IQuestion'
-import http from '../http'
+import { http } from '../http'
+import IQuestionCardProps from '../interfaces/IQuestionCardProps'
 const { Panel } = Collapse
 const { TextArea } = Input
-
-type IQuestionCardProps = {
-  question: IQuestion
-  removeQuestion: (id: string) => Promise<void>
-}
 
 const QuestionCard = ({ question, removeQuestion }: IQuestionCardProps) => {
   const [opened, setOpened] = useState(false)
@@ -62,6 +57,7 @@ const QuestionCard = ({ question, removeQuestion }: IQuestionCardProps) => {
     setRemovingLoading(true)
     try {
       await removeQuestion(question.id)
+      message.success('The question was successfully removed.', 5)
     } catch (error) {
       setRemovingLoading(false)
       message.error('An error occurred, the question could not be removed.', 5)
