@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using QxA.Api.Models;
 using QxA.Api.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace QxA.Api.Controllers
 {
@@ -100,6 +102,15 @@ namespace QxA.Api.Controllers
                 return NotFound(new { error = $"User {username} not found." });
 
             return Ok(_mapper.Map<UserDTO>(user));
+        }
+
+        [HttpGet("search/{query}")]
+        public async Task<IActionResult> SearchUser(string query)
+        {
+            var users = await _userManager.Users.Where(u => u.UserName.Contains(query)).ToListAsync();
+
+            return Ok(users.Select(u => u.UserName));
+
         }
 
         [Authorize]
